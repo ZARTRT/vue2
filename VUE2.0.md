@@ -142,5 +142,7 @@ npm list vue
 
 <img src="VUE2.0.assets/image-20211119095417792.png" alt="image-20211119095417792" style="zoom: 50%;" align="left"/>
 
+##### test
+
 
 
