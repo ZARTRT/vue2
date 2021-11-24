@@ -126,9 +126,66 @@ npm list vue
 
 ##### 5.3 计算属性 & 侦听器
 
+> 计算属性和方法的区别
+
+<img src="VUE2.0.assets/image-20211124144923894.png" alt="image-20211124144923894" style="zoom:25%;" align="left"/>
+
+1.方法是在每一次页面渲染的时候，都发生一次运行。比如将count()方法放入到页面当中，当页面渲染时count()方法都会执行一次，而如果将count()放入到computed计算属性当中，当页面发生其它渲染时就不会执行。只有当count依赖的属性发生改变时，才会计算并依赖响应式进行缓存起来。
+
+2.所以相对来说，放在computed里面性能要比方法好。
+
+3.⚠️ 小技巧：在模板中，如果有一些常量不希望被放在dota当中去响应式依赖收集时，可以利用computed的缓存特性，将这个常量放在计算属性当中。
+
+<img src="VUE2.0.assets/image-20211124151228831.png" alt="image-20211124151228831" style="zoom:25%;" align="left"/>
+
+> 侦听器 watch
+
+computed和watch都可以侦听数据的变化，那么他们有什么区别？
+
+1.计算属性是依赖其内部属性相关的响应式依赖发生改变才会重新求值。当数据量较大时，那计算消耗的时间和内存较大，会阻塞我们的渲染。
+
+2.watch一般用在数据变化后执行异步操作或者开销较大的操作
+
+##### 5.4 vue中数组操作
+
+> 这里就不得不提到Object.defineProperty的弊端
+
+- 不能检测对象属性的添加或删除
+- 不能检测到数组长度变化（通过改变length而增加的长度不能监测到）
+- 其实不是因为defindProperty的局限性，而是vue出于性能的考量，不会对数组每个元素都监听
+
+> Vue为要这么设计呢？
+
+因为数组一般都是用来遍历一些列表的，如果列表是一个海量的数据，在vue的响应式过程中会进行前置的observe依赖收集，那这个收集就会变得很庞大间接的消耗性能
+
+> 解决方案
+
+解决方案一：通过vue.set在data上响应式的添加属性，并把这个属性加到响应式的跟踪里面去。
+
+<img src="VUE2.0.assets/image-20211124162707789.png" alt="image-20211124162707789" style="zoom:25%;" align="left"/>
+
+解决方案二：使用数组的push
+
+思考：那为什么数组的push又可以用呢？
+
+那是因为vue对于数组的方法进行了代理包装，把这些数组的函数方法也加入了响应式依赖
+
+```js
+const oldArrayProperty = Array.prototype;
+const newArrayProperty = Object.create(oldArrayProperty);
+['pop', 'push', 'shift', 'unshift', 'splice'].forEach((method) => {
+    newArrayProperty[method] = function() {
+        renderView();
+        oldArrayProperty[method].call(this, ...arguments);
+    };
+});
+ // 在observer函数中加入数组的判断，如果传入的是数组，则改变数组的原型对象为我们修改过后的原型。
+    if (Array.isArray(target)) {
+        target.__proto__ = newArrayProperty;
+    }
+```
 
 
-##### 5.4 数组操作
 
 ### 二、高阶用法
 
