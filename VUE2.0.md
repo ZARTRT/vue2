@@ -195,7 +195,7 @@ const newArrayProperty = Object.create(oldArrayProperty);
 
 ```js
 // html
-<button v-on:click-"add($event,1)">add</button>
+<button v-on:click="add($event,1)">add</button>
 // js
 add(event,num) {
 event.stopProation()
@@ -225,7 +225,7 @@ event.stopProation()
   <img src="VUE2.0.assets/image-20211125122905174.png" width="600" />
 </p>
 
-注意：在原生事件中，$emit是事件对象。在自定义事件中，$emit是传递过来的参数。
+注意：在原生事件中，$event是事件对象。在自定义事件中，$event是传递过来的参数。
 
 ##### 6.3 样式
 
@@ -267,7 +267,7 @@ event.stopProation()
 
 ###### 7.1.3 全局导入
 
-当我们经常使用组件而要不断导入时，其实很浪费时间。这是可以使用全局导入，但是还是会有体积不可控的问题产生
+当我们经常使用组件而要不断导入时，其实很浪费时间。这时可以使用全局导入，但是还是会有体积不可控的问题产生
 
 <img src="VUE2.0.assets/image-20211125160558968.png" alt="image-20211125160558968"  align="left" style="zoom: 50%;" />
 
@@ -279,11 +279,41 @@ event.stopProation()
 
 ##### 7.2 组件生命周期
 
+###### 7.2.1 组件生命周期图
+
 <img src="VUE2.0.assets/lifecycle.png"  align="left"  />
+
+###### 7.2.2 组件生命周期每个阶段所处理的事情
+
+<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20211130111243679.png" alt="image-20211130111243679" style="zoom:25%;" align="left"/>
+
+##### 7.3 动态组件
+
+当页面情况较为复杂，同一个结构展示不同参数，比如要切换展示两个不同的参数的时候，基本做法就是通过不同的判断同时写多个组件来依赖一个值变化而变化，但是这样的方案就很复杂了。这时我们可以用computed属性来做。依赖值的变化去缓存而改变。就是说计算属性不仅仅只是字面上的计算这一件事情，比如通过条件判断而返回不同参数。也就是说计算属性的本质就是响应式依赖，这个依赖就是变化的依赖。
+
+当组件变多需要切换组件的时候，用**动态组件**来做。通过 Vue 的 `<component>` 元素加一个特殊的 `is` attribute 来实现。那么利用上一步的思想引入使用vue的component标签，结合计算属性即可展示不同的组件。
+
+##### 7.4 keep-alive
+
+当组件切换后Dom节点会重新创建（重排重绘），这样会导致组件内数据被重新初始化，这个时候用keep-alive来缓存所包裹组件的实例，当组件再次出现在页面当中时，就不需要重新创建这个组件实例。keep-alive先前缓存下来的实例通过vm.$el获得先前的dom元素直接插入到页面中去，从而提升页面效率。
+
+总结：
+
+1.keep-alive获取组件实例
+
+2.组件实例通过vm.$el获取dom元素
+
+<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20211130122706835.png" alt="image-20211130122706835" style="zoom: 25%;" align="left"/>
+
+##### 7.5 keep-alive的生命周期和props
+
+<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20211130123600915.png" alt="image-20211130123600915" style="zoom:25%;" align="left"/>
 
 ### 二、高阶用法
 
 <img src="VUE2.0.assets/image-20211119094646318.png" alt="" style="zoom: 50%;" align='left'/>
+
+#### 1.自定义指令
 
 ### 三、响应式源码分析
 
