@@ -285,7 +285,7 @@ event.stopProation()
 
 ###### 7.2.2 组件生命周期每个阶段所处理的事情
 
-<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20211130111243679.png" alt="image-20211130111243679" style="zoom:25%;" align="left"/>
+<img src="VUE2.0.assets/image-20211130111243679.png" alt="image-20211130111243679" style="zoom:25%;" align="left"/>
 
 ##### 7.3 动态组件
 
@@ -303,17 +303,71 @@ event.stopProation()
 
 2.组件实例通过vm.$el获取dom元素
 
-<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20211130122706835.png" alt="image-20211130122706835" style="zoom: 25%;" align="left"/>
+<img src="VUE2.0.assets/image-20211130122706835.png" alt="image-20211130122706835" style="zoom: 25%;" align="left"/>
 
 ##### 7.5 keep-alive的生命周期和props
 
-<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20211130123600915.png" alt="image-20211130123600915" style="zoom:25%;" align="left"/>
+<img src="VUE2.0.assets/image-20211130123600915.png" alt="image-20211130123600915" style="zoom:25%;" align="left"/>
 
 ### 二、高阶用法
 
 <img src="VUE2.0.assets/image-20211119094646318.png" alt="" style="zoom: 50%;" align='left'/>
 
 #### 1.自定义指令
+
+#### 2.双向绑定（表单）
+
+2.1**v-model**，用于在表单元素input 、textarea及select上创建双向数据绑定的语法糖
+
+<img src="VUE2.0.assets/image-20211209103851720.png" alt="image-20211209103851720" style="zoom:25%;" align="left"/>
+
+2.2由于表单值属性不一样，那么双向绑定的也不一样，使用value和checked属性作为prop属性来传递，用change和input事件作为监听从子传到父。**v-model.lazy**用change事件代替input事件，意思就是失焦后改变
+
+<img src="VUE2.0.assets/image-20211209104535019.png" alt="image-20211209104535019" style="zoom:25%;" align="left"/>
+
+2.3 在vue框架中，v-model对于合成事件做了优化，比如输入拼音去合成中文和日文时，输入框中的拼音不被双向绑定，等到具体合成中文和日文时才双向绑定上去。
+
+<img src="VUE2.0.assets/image-20211209114419930.png" alt="image-20211209114419930" style="zoom:25%;" align="left"/>
+
+2.4 v-model的修饰符
+
+`<input type="text" v-model.lazy="text">` 将input事件替换为change事件
+
+`<textarea v-model.trim="text">` 去掉文字空格
+
+`<input type="number" v-model.number="num">`  input上有个特殊的就是number。当默认值是number，通过修改默认值以后，因为input的原因值会变成string类型。这时我们家上v-model.number即可
+
+更多具体实例在https://course.study.163.com/480000006849438/lecture-480000037171645
+
+<img src="VUE2.0.assets/image-20211209115434521.png" alt="image-20211209115434521" style="zoom:25%;" align="left"/>
+
+#### 3.组件设计
+
+我们会抽取稳定的组件nav和footer组合成layout，将具有差异化的依照组件设计思想的依赖注入原则，在使用过程中动态的分配内容
+
+<img src="VUE2.0.assets/image-20211209151752041.png" alt="image-20211209151752041" style="zoom:25%;" align="left"/>
+
+<img src="VUE2.0.assets/image-20211209151812803.png" alt="image-20211209151812803" style="zoom:25%;" align="left"/>
+
+3.1插槽 v-slot设计思想，将公共的地方抽离出来
+
+<img src="VUE2.0.assets/image-20211209152358025.png" alt="image-20211209152358025" style="zoom:25%;" align="left"/>
+
+3.2 编译作用域（作用域插槽）
+
+父组件中的变量跟子组件中的没有关系，对于子组件是不可见的。也就是说如下content的信息是在父组件编译，对于slot-layout是不可见的。
+
+<img src="VUE2.0.assets/image-20211209151343780.png" alt="image-20211209151343780" style="zoom:25%;" align="left"/>
+
+3.3 稳定的组件
+
+- 一般稳定的（nav）组件不适合写入过多的条件判断
+- 稳定的组件被多个地方引用
+- 稳定的组件不要轻易去修改
+
+当修改稳定的组件时，需要大量的测试回归去确保他的稳定性。那我们有解决的办法吗？
+
+当然是有的，可以把在稳定子组件里的变量提升到父组件中去，这样我们就能在父组件中控制而不需要修改稳定的组件（将信息插入到子组件），但是这样子组件中的数据就没有独立和完整性。
 
 ### 三、响应式源码分析
 

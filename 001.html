@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // `delay`毫秒后执行resolve
+function timerPromisefy(delay) {
+    return new Promise(function (resolve) {
+        setTimeout(function () {
+            resolve(delay);
+        }, delay);
+    });
+}
+// 当数组中所有Promise对象被resolve之后，该方法才返回
+Promise.all([
+    timerPromisefy(1),
+    timerPromisefy(32),
+    timerPromisefy(64),
+    timerPromisefy(128)
+]).then(function (value) {
+    console.log(value);    
+});
+
+//输出： [ 1, 32, 64, 128 ]
+    </script>
+</body>
+</html>
