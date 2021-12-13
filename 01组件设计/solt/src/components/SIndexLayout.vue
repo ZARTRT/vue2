@@ -1,7 +1,7 @@
 <template>
   <div>
     <header>
-      <slot name="header">
+      <slot name="header" v-bind:user="user">
         <nav>
           <span>{{ user.name }}</span>
         </nav>

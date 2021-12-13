@@ -1,8 +1,8 @@
 <template>
     <div>
         <s-index-layout>
-            <template v-slot:header>
-                hahah
+            <template v-slot:header={user}>
+                {{user.name}}
             </template>
             <template v-slot:default>
                 xixii
