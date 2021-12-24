@@ -48,11 +48,13 @@ npm list vue
 
 ##### 4.3 指令
 
-> 指令是带有v-前缀的特殊特性，当表达式的值发生改变时将其产生的原带影响,响应式的作用到该dom节点上
+> 指令是带有v-前缀的特殊特性
 >
-> v-on 事件绑定，可简写成冒号:
+> 指令的职责：当表达式的值发生改变时将其产生的原带影响,响应式的作用到该dom节点上
 >
-> v-bind 属性绑定，可简写成艾特符号@
+> v-on 事件绑定，可简写成艾特符号@
+>
+> v-bind 属性绑定，可简写成冒号:
 
 ##### 4.4 条件渲染
 
@@ -142,7 +144,7 @@ npm list vue
 
 computed和watch都可以侦听数据的变化，那么他们有什么区别？
 
-1.计算属性是依赖其内部属性相关的响应式依赖发生改变才会重新求值。当数据量较大时，那计算消耗的时间和内存较大，会阻塞我们的渲染。
+1.计算属性是依赖其内部属性相关的响应式依赖发生改变才会重新求值。当数据量较大时（依赖收集），那计算消耗的时间和内存较大，会阻塞我们的渲染。
 
 2.watch一般用在数据变化后执行异步操作或者开销较大的操作
 
@@ -185,11 +187,223 @@ const newArrayProperty = Object.create(oldArrayProperty);
     }
 ```
 
+#### 6.事件&样式
 
+##### 6.1 DOM事件
+
+访问当前dom事件对象，可以在方法中传入$event这样的参数，通过这样的事件对象我们可以阻止事件冒泡行为。
+
+```js
+// html
+<button v-on:click="add($event,1)">add</button>
+// js
+add(event,num) {
+event.stopProation()
+}
+```
+
+为了保证methods方法只有纯粹的数据逻辑，不去处理DOM相关的操作，所以vue给我们提供了事件修饰符。例如：v-on:click.stop()
+
+##### 6.2 自定义事件(谈及到了数据双向绑定)
+
+1. v-on除了可以监听原生事件，还可以监听组件的自定义事件，我们都知道vue组件是单向数据流的，子组件不能直接修改父组件传下来的属性。
+
+2. 但我们可以通过内嵌的$emit方法在子组件中触发一个事件，第一个参数为事件名并同时在父组件中通过v-on监听这个事件，获取子组件传递过来的信息。
+
+3. 这一过程其实就实现了一定的**数据双向绑定**，如下左图所示(右图:msg.sync为简写)：
+
+   1. 父组件将data中msg的参数绑定到子组件的msg属性上，并传递给子组件
+   2. 子组件通过prop接受，并将值响应式的展示在其msg属性所在dom节点上
+   3. 如果子组件“修改”父组件msg参数，那么通过$emit找到在父组件中绑定的自定义事件，并传递一个参数过去用$event接受
+   4. $event将参数交给msg并告知父组件msg更新，更新后父组件又通过v-on这样的属性绑定传递给了子组件。
+   5. 总结就是：子组件通知父组件修改，父组件再同步下来给子组件。（数据双向绑定，其实还是数据单向流。我简称为双向绑定的单向流）
+
+   
+
+<p float="left">
+  <img src="VUE2.0.assets/image-20211125121020989.png" width="500" />
+  <img src="VUE2.0.assets/image-20211125122905174.png" width="600" />
+</p>
+
+注意：在原生事件中，$event是事件对象。在自定义事件中，$event是传递过来的参数。
+
+##### 6.3 样式
+
+1.当在切换html结构样式时，我们可以通过修改当前dom节点style的值或者修改css中的class来批量修改样式。
+
+2.在vue.js当中我们习惯用vm数据去驱动view的样式，和prop传值一样通过v-bind去处理，不同的是当v-bind绑定class和style时，vue做了一定的增强，使其不仅可以处理表达式，还能处理对象或者数组。
+
+3.在javascript中，false、0、""、null、undefined、NaN都不是真值（true），其它都是truthy值
+
+<img src="VUE2.0.assets/image-20211125153441393.png" alt="image-20211125153441393" style="zoom: 67%;" align="left"/>
+
+##### 6.4 Scoped
+
+通过BEM来处理样式污染的问题
+
+当使用了scoped以后，编译出来的html节点上就会多出data-v-随机哈希值，同样在编译出来的style上也会有data-v-随机哈希值的选择器
+
+<img src="VUE2.0.assets/image-20211125154118770.png" alt="image-20211125154118770" style="zoom:25%;" align="left"/>
+
+#### 7.组件
+
+##### 组件了解的目标
+
+> 组件注册规则（如何正确使用组件）
+>
+> 组件生命周期（在组件生命周期的各个节点上组件都会做些什么）
+>
+> 动态组件
+
+#####  7.1 组件注册规则
+
+###### 7.1.1 全局注册的组件在哪里都能使用
+
+但有个弊端：我们工程打包过程当中会将所有组件打包进去，如果后续有组件被遗弃会造成体积不可控
+
+###### 7.1.2 局部注册的组件只能在当前组件中使用
+
+<img src="VUE2.0.assets/image-20211125155931170.png" alt="image-20211125155931170" style="zoom: 40%;" align="left"/>
+
+###### 7.1.3 全局导入
+
+当我们经常使用组件而要不断导入时，其实很浪费时间。这时可以使用全局导入，但是还是会有体积不可控的问题产生
+
+<img src="VUE2.0.assets/image-20211125160558968.png" alt="image-20211125160558968"  align="left" style="zoom: 50%;" />
+
+###### 7.1.4 按需载入（瘦身）
+
+为了解决项目体积不可控的问题，特别是引用一些三方库的时候，比如elementUI。在最终发布的时候，我们并不希望打包所有组件资源，这个时候我就要按需载入了。也就是模板中用到了哪个组件资源库具体的组件，才会打包那个用到的组件，并不会大包所有组件资源库。
+
+<img src="VUE2.0.assets/image-20211125162144513.png" alt="image-20211125162144513" style="zoom:25%;" align="left"/>
+
+##### 7.2 组件生命周期
+
+###### 7.2.1 组件生命周期图
+
+<img src="VUE2.0.assets/lifecycle.png"  align="left"  />
+
+###### 7.2.2 组件生命周期每个阶段所处理的事情
+
+<img src="VUE2.0.assets/image-20211130111243679.png" alt="image-20211130111243679" style="zoom:25%;" align="left"/>
+
+##### 7.3 动态组件
+
+当页面情况较为复杂，同一个结构展示不同参数，比如要切换展示两个不同的参数的时候，基本做法就是通过不同的判断同时写多个组件来依赖一个值变化而变化，但是这样的方案就很复杂了。这时我们可以用computed属性来做。依赖值的变化去缓存而改变。就是说计算属性不仅仅只是字面上的计算这一件事情，比如通过条件判断而返回不同参数。也就是说计算属性的本质就是响应式依赖，这个依赖就是变化的依赖。
+
+当组件变多需要切换组件的时候，用**动态组件**来做。通过 Vue 的 `<component>` 元素加一个特殊的 `is` attribute 来实现。那么利用上一步的思想引入使用vue的component标签，结合计算属性即可展示不同的组件。
+
+##### 7.4 keep-alive
+
+当组件切换后Dom节点会重新创建（重排重绘），这样会导致组件内数据被重新初始化，这个时候用keep-alive来缓存所包裹组件的实例，当组件再次出现在页面当中时，就不需要重新创建这个组件实例。keep-alive先前缓存下来的实例通过vm.$el获得先前的dom元素直接插入到页面中去，从而提升页面效率。
+
+总结：
+
+1.keep-alive获取组件实例
+
+2.组件实例通过vm.$el获取dom元素
+
+<img src="VUE2.0.assets/image-20211130122706835.png" alt="image-20211130122706835" style="zoom: 25%;" align="left"/>
+
+##### 7.5 keep-alive的生命周期和props
+
+<img src="VUE2.0.assets/image-20211130123600915.png" alt="image-20211130123600915" style="zoom:25%;" align="left"/>
 
 ### 二、高阶用法
 
 <img src="VUE2.0.assets/image-20211119094646318.png" alt="" style="zoom: 50%;" align='left'/>
+
+#### 1.自定义指令
+
+#### 2.双向绑定（表单）
+
+2.1**v-model**，用于在表单元素input 、textarea及select上创建双向数据绑定的语法糖
+
+<img src="VUE2.0.assets/image-20211209103851720.png" alt="image-20211209103851720" style="zoom:25%;" align="left"/>
+
+2.2由于表单值属性不一样，那么双向绑定的也不一样，使用value和checked属性作为prop属性来传递，用change和input事件作为监听从子传到父。**v-model.lazy**用change事件代替input事件，意思就是失焦后改变
+
+<img src="VUE2.0.assets/image-20211209104535019.png" alt="image-20211209104535019" style="zoom:25%;" align="left"/>
+
+2.3 在vue框架中，v-model对于合成事件做了优化，比如输入拼音去合成中文和日文时，输入框中的拼音不被双向绑定，等到具体合成中文和日文时才双向绑定上去。
+
+<img src="VUE2.0.assets/image-20211209114419930.png" alt="image-20211209114419930" style="zoom:25%;" align="left"/>
+
+2.4 v-model的修饰符
+
+`<input type="text" v-model.lazy="text">` 将input事件替换为change事件
+
+`<textarea v-model.trim="text">` 去掉文字空格
+
+`<input type="number" v-model.number="num">`  input上有个特殊的就是number。当默认值是number，通过修改默认值以后，因为input的原因值会变成string类型。这时我们家上v-model.number即可
+
+更多具体实例在https://course.study.163.com/480000006849438/lecture-480000037171645
+
+<img src="VUE2.0.assets/image-20211209115434521.png" alt="image-20211209115434521" style="zoom:25%;" align="left"/>
+
+#### 3.组件设计
+
+我们会抽取稳定的组件nav和footer组合成layout，将具有差异化的依照组件设计思想的依赖注入原则，在使用过程中动态的分配内容
+
+<img src="VUE2.0.assets/image-20211209151752041.png" alt="image-20211209151752041" style="zoom:25%;" align="left"/>
+
+<img src="VUE2.0.assets/image-20211209151812803.png" alt="image-20211209151812803" style="zoom:25%;" align="left"/>
+
+3.1插槽 v-slot设计思想，将公共的地方抽离出来
+
+<img src="VUE2.0.assets/image-20211209152358025.png" alt="image-20211209152358025" style="zoom:25%;" align="left"/>
+
+3.2 编译作用域（作用域插槽）
+
+父组件中的变量跟子组件中的没有关系，对于子组件是不可见的。也就是说如下content的信息是在父组件编译，对于slot-layout是不可见的。
+
+<img src="VUE2.0.assets/image-20211209151343780.png" alt="image-20211209151343780" style="zoom:25%;" align="left"/>
+
+3.3 稳定的组件
+
+- 一般稳定的（nav）组件不适合写入过多的条件判断
+- 稳定的组件被多个地方引用
+- 稳定的组件不要轻易去修改
+
+当修改稳定的组件时，需要大量的测试回归去确保他的稳定性。那我们有解决的办法吗？
+
+当然是有的，可以把在稳定子组件里的变量提升到父组件中去，这样我们就能在父组件中控制而不需要修改稳定的组件（将信息插入到子组件），但是这样子组件中的数据就没有独立和完整性，在slot中通过v-bind:绑定属性以prop作用传递给父组件slot，然后在父组件使用
+
+<img src="VUE2.0.assets/image-20211212123342280.png" alt="image-20211212123342280" style="zoom:25%;" align="left"/>
+
+
+
+#### 4.组件通信
+
+组件通信是单向数据流，在通信过程中我们可以用v-bind结合props和v-on结合$emit来相互传递参数。但是当组件层级过多，内层访问外层组件时（$emit方法），如果有一个环节传递错误就会导致故障率的产生，所以也不是那么的方便开发和debugger。
+
+4.1 **this.$root**获取根组件实例，**this.$parent** 获取父组件实例
+
+<img src="VUE2.0.assets/image-20211224155925724.png" alt="image-20211224155925724" style="zoom:25%;" align="left"/>
+
+4.2 **$parent**的实际作用在element中定向消息的应用，找到指定要抵达的组件去传递数据
+
+<img src="VUE2.0.assets/image-20211224160623377.png" alt="image-20211224160623377" style="zoom:25%;" align="left"/>
+
+4.3 **$ref** 父组件访问子组件
+
+<img src="VUE2.0.assets/image-20211224161024585.png" alt="image-20211224161024585" style="zoom:25%;" align="left"/>
+
+4.4 ⚠️ 在this.$parent中，具有一定的强耦合出现。
+
+​	比如说在新开发的功能中需要引用到写好的稳定组件，也就是说当子组件被多个父组件引用时，在子组件中有一段代码this.$parent.fish()，但是不是所有引用子组件的父组件中都有fish这个方法，这个时候就会报错访问不到fish这个方法。
+
+<img src="VUE2.0.assets/image-20211224162536400.png" alt="image-20211224162536400" style="zoom:25%;" align="left"/>
+
+那么如何解决这样的强耦合呢？通过依赖注入来解决一定的强耦合。但是任然还是有一定的强耦合存在，还是需要成对的出现（父子组件）因为你子组件inject的内容需要父组件provide。依赖注入的优点父子组件之间不需要关注彼此的提供来源和注入来源。缺点是组件之间的耦合还是较为紧密，不易于重构，提供的属性也是非响应式的
+
+<img src="VUE2.0.assets/image-20211224163742566.png" alt="image-20211224163742566" style="zoom:25%;" align="left"/>
+
+4.5  子组件上的某个元素上v-bind="$attrs"，v-on="$listeners"来接受父组件传递过来的参数（属性和事件），绑定属性和事件的接收可以来实现双向的绑定组件之间的通信
+
+<img src="VUE2.0.assets/image-20211224172523076.png" alt="image-20211224172523076" style="zoom:25%;" align="left"/>
+
+
 
 ### 三、响应式源码分析
 
@@ -198,8 +412,6 @@ const newArrayProperty = Object.create(oldArrayProperty);
 ### 四、VUE生态以及源码分析
 
 <img src="VUE2.0.assets/image-20211119095417792.png" alt="image-20211119095417792" style="zoom: 50%;" align="left"/>
-
-##### test
 
 
 
