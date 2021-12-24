@@ -373,6 +373,38 @@ event.stopProation()
 
 
 
+#### 4.组件通信
+
+组件通信是单向数据流，在通信过程中我们可以用v-bind结合props和v-on结合$emit来相互传递参数。但是当组件层级过多，内层访问外层组件时（$emit方法），如果有一个环节传递错误就会导致故障率的产生，所以也不是那么的方便开发和debugger。
+
+4.1 **this.$root**获取根组件实例，**this.$parent** 获取父组件实例
+
+<img src="VUE2.0.assets/image-20211224155925724.png" alt="image-20211224155925724" style="zoom:25%;" align="left"/>
+
+4.2 **$parent**的实际作用在element中定向消息的应用，找到指定要抵达的组件去传递数据
+
+<img src="VUE2.0.assets/image-20211224160623377.png" alt="image-20211224160623377" style="zoom:25%;" align="left"/>
+
+4.3 **$ref** 父组件访问子组件
+
+<img src="VUE2.0.assets/image-20211224161024585.png" alt="image-20211224161024585" style="zoom:25%;" align="left"/>
+
+4.4 ⚠️ 在this.$parent中，具有一定的强耦合出现。
+
+​	比如说在新开发的功能中需要引用到写好的稳定组件，也就是说当子组件被多个父组件引用时，在子组件中有一段代码this.$parent.fish()，但是不是所有引用子组件的父组件中都有fish这个方法，这个时候就会报错访问不到fish这个方法。
+
+<img src="VUE2.0.assets/image-20211224162536400.png" alt="image-20211224162536400" style="zoom:25%;" align="left"/>
+
+那么如何解决这样的强耦合呢？通过依赖注入来解决一定的强耦合。但是任然还是有一定的强耦合存在，还是需要成对的出现（父子组件）因为你子组件inject的内容需要父组件provide。依赖注入的优点父子组件之间不需要关注彼此的提供来源和注入来源。缺点是组件之间的耦合还是较为紧密，不易于重构，提供的属性也是非响应式的
+
+<img src="VUE2.0.assets/image-20211224163742566.png" alt="image-20211224163742566" style="zoom:25%;" align="left"/>
+
+4.5  子组件上的某个元素上v-bind="$attrs"，v-on="$listeners"来接受父组件传递过来的参数（属性和事件），绑定属性和事件的接收可以来实现双向的绑定组件之间的通信
+
+<img src="VUE2.0.assets/image-20211224172523076.png" alt="image-20211224172523076" style="zoom:25%;" align="left"/>
+
+
+
 ### 三、响应式源码分析
 
 <img src="VUE2.0.assets/image-20211119095225509.png" alt="image-20211119095225509" style="zoom: 50%;" align="left"/>
