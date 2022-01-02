@@ -1,18 +1,18 @@
 <template>
   <div>
-    <header>
+    <!-- <header>
       <slot name="header" v-bind:user="user">
         <nav>
           <span>{{ user.name }}</span>
         </nav>
       </slot>
-    </header>
+    </header> -->
     <main>
       <slot name="default">默认正文</slot>
     </main>
-    <footer>
+    <!-- <footer>
       <slot name="footer">默认尾部</slot>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
