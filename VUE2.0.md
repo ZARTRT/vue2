@@ -1,3 +1,7 @@
+---
+typora-copy-images-to: VUE2.0.assets
+---
+
 # VUE 2.0
 
 ### 一、基础用法
@@ -218,7 +222,6 @@ event.stopProation()
    4. $event将参数交给msg并告知父组件msg更新，更新后父组件又通过v-on这样的属性绑定传递给了子组件。
    5. 总结就是：子组件通知父组件修改，父组件再同步下来给子组件。（数据双向绑定，其实还是数据单向流。我简称为双向绑定的单向流）
 
-   
 
 <p float="left">
   <img src="VUE2.0.assets/image-20211125121020989.png" width="500" />
@@ -403,7 +406,147 @@ event.stopProation()
 
 <img src="VUE2.0.assets/image-20211224172523076.png" alt="image-20211224172523076" style="zoom:25%;" align="left"/>
 
+#### 5.Vue.mixin（混入对象）
 
+全局混入的目的：函数复用，也是JavaScript设计模式。也涉及到了原型链的思想，子类中有的就不会向上去查找。
+
+这里需要了解vue文档里面的mixin原理和规则
+
+![image-20220102170701781](VUE2.0.assets\image-20220102170701781.png)
+
+#### 6.Vue.use（插件使用）
+
+也是结合了mixin，这里举例Vue.use(vuex)
+
+<img src="VUE2.0.assets/image-20220102170252721.png" alt="image-20220102170252721" style="zoom: 67%;" align="left"/>
+
+#### 7.组件复用
+
+`复用方式：Mixin(对象混入)、HOC(高阶组件)、Renderless组件`
+
+7.1 首先组件复用其中一部分也是复用的逻辑，那么逻辑的复用也就意味着可以混入对象（mixin），把公共的逻辑部分抽离成对象混入进去。
+
+但是也有缺点：
+
+- 打破了原有组件的封装
+- 增加组件复杂度
+- 可能会出现命名冲突的问题
+- 仅仅只是对逻辑的复用，模板不能复用
+
+![image-20220102173944459](VUE2.0.assets/image-20220102173944459.png)
+
+![image-20220102172736394](VUE2.0.assets/image-20220102172736394.png)
+
+7.2 HOC组件
+
+高阶组件本质也是对高阶函数的引用（装饰者模式）
+
+<img src="VUE2.0.assets/image-20220102175547321.png" alt="image-20220102175547321" style="zoom: 50%;" align="left"/>
+
+那么相比Mixin而言，HOC的优缺点
+
+优点
+
+- 模板可复用
+- 不会出现命名冲突（本质上是一个HOC是套了一层父组件）
+
+缺点
+
+- 组件复杂度高，多层嵌套，调试很痛苦（官方也不推荐这么做）
+
+<img src="VUE2.0.assets/image-20220102180206283.png" alt="image-20220102180206283"  align="left"/>
+
+7.3 Renderless组件
+
+优点：
+
+- 模板可复用
+- 不会出现命名冲突
+- 符合依赖倒置原则
+- 复用的接口来源清晰（利用子组件的绑定属性将方法暴露给父组件去处理）
+
+```js
+// SValidate组件
+<template>
+  <div>
+    <slot :validate="validate"></slot>
+    {{ errMsg }}
+  </div>
+</template>
+<script>
+export default {
+  props: ["value", "rules"],
+  data() {
+    return { errMsg: "" };
+  },
+  methods: {
+    validate() {
+      let validate = this.rules.reduce((pre, cur) => {
+        let check = cur && cur.test && cur.test(this.value);
+        this.errMsg = check ? "" : cur.message;
+        return pre && check;
+      }, true);
+      return validate;
+    }
+  }
+};
+</script>
+```
+
+```js
+// Sbody组件
+<template>
+  <div>
+    <s-validate #default="{ validate }" :value="value" :rules="rules">
+      <input type="text" @blur="validate" v-model="value" />
+    </s-validate>
+
+    <s-validate #default="{ validate }" :value="text" :rules="textRules">
+      <textarea type="text" @blur="validate" v-model="text" />
+    </s-validate>
+  </div>
+</template>
+
+<script>
+import SValidate from "./SValidate";
+
+export default {
+  data: () => ({
+    value: "hi",
+    text: "hi",
+    rules: [
+      {
+        test: function(value) {
+          return /\d+/.test(value);
+        },
+        message: "请输入一个数字"
+      }
+    ],
+    textRules: [
+      {
+        test: function(value) {
+          return value;
+        },
+        message: "请输入一个非空的值"
+      }
+    ]
+  }),
+  components: {
+    SValidate
+  }
+};
+</script>
+```
+
+自我对组件复用的总结
+
+- 好的组件复用要达到逻辑和模板都能复用
+- 所谓复用也是利用JavaScript设计理念去实现，比如函数的单例、装饰者模式，达到对其他对象的组合、沿用。
+- Mixin对公共逻辑的复用，不能复用模板
+- HOC是将不同的组件放入HOC组件中去经历规则以后在外层组装一个新的组件，很复杂
+- Renderless组件，是将复用的组件和逻辑提供给外层组件使用。复用的可将逻辑部分暴露提供给其他外层组件（父组件），外层组件可调用复用组件暴露出来的方法以及模板
+- 如果只是逻辑的复用，可尝试Mixin模式。如果是逻辑加模板都复用可尝试Renderless。
+- 复用要达到动态的效果，而动态的部分尽量不要放在公共的组件部分，而是在外层组件（比如父组件）推动。
 
 ### 三、响应式源码分析
 
