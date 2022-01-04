@@ -552,6 +552,8 @@ export default {
 
 <img src="VUE2.0.assets/image-20211119095225509.png" alt="image-20211119095225509" style="zoom: 50%;" align="left"/>
 
+关于响应式源码分析在知乎上写过一些，具体可点击：https://zhuanlan.zhihu.com/p/434798426
+
 ### 四、VUE生态以及源码分析
 
 <img src="VUE2.0.assets/image-20211119095417792.png" alt="image-20211119095417792" style="zoom: 50%;" align="left"/>
