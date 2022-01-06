@@ -548,11 +548,37 @@ export default {
 - 如果只是逻辑的复用，可尝试Mixin模式。如果是逻辑加模板都复用可尝试Renderless。
 - 复用要达到动态的效果，而动态的部分尽量不要放在公共的组件部分，而是在外层组件（比如父组件）推动。
 
-### 三、响应式源码分析
+### 三、深入VUE源码分析
+
+#### 1.Object.defineProperty Vue响应式源码分析
 
 <img src="VUE2.0.assets/image-20211119095225509.png" alt="image-20211119095225509" style="zoom: 50%;" align="left"/>
 
 关于响应式源码分析在知乎上写过一些，具体可点击：https://zhuanlan.zhihu.com/p/434798426
+
+
+
+#### 2. computed、watch 、watchEffect源码分析
+
+> 书写形式
+>
+> ```js
+> let count = 0; // count 具有响应式属性，且有value属性
+> 
+> // 1.computed
+> let x = computed (() = > count.value + 3)
+> 
+> // 2.watch
+> watch(() = > count.value,(currentValue,preValue) = > {},{deep,immediate})
+> 
+> // 3.watchEffect
+> let stop = watchEffect(() = > count.value + 3)
+> 
+> ```
+>
+> 
+
+
 
 ### 四、VUE生态以及源码分析
 
