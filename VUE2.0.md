@@ -594,7 +594,35 @@ export default {
 
 ##### 2.2 watch
 
+watch除了能监听键值、数组多个值，还能监听函数。
 
+<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20220121113349631.png" alt="image-20220121113349631" style="zoom: 50%;" align="left"/>
+
+<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20220121113401386.png" alt="image-20220121113401386" style="zoom: 50%;" align="left"/>
+
+source：要处理的来源，键值、数组、函数
+
+cb：处理方式
+
+比较前后值的不同进行处理
+
+##### 2.3 总结
+
+computed 与watch的区别
+
+形式上：
+
+computed 有个开关一样的东西来控制缓存和内部响应式数据更新（通知依赖处理）
+
+watch 比较前后值的不同进行处理
+
+书写上：
+
+自己看吧
+
+最后：
+
+对于watch和computed的源码，这个地方很需要时间去看，我没时间，懒得看了。
 
 ### 四、VUE生态以及源码分析
 
