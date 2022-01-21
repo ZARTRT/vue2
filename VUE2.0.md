@@ -548,11 +548,53 @@ export default {
 - 如果只是逻辑的复用，可尝试Mixin模式。如果是逻辑加模板都复用可尝试Renderless。
 - 复用要达到动态的效果，而动态的部分尽量不要放在公共的组件部分，而是在外层组件（比如父组件）推动。
 
-### 三、响应式源码分析
+### 三、深入VUE源码分析
+
+#### 1.Object.defineProperty Vue响应式源码分析
 
 <img src="VUE2.0.assets/image-20211119095225509.png" alt="image-20211119095225509" style="zoom: 50%;" align="left"/>
 
 关于响应式源码分析在知乎上写过一些，具体可点击：https://zhuanlan.zhihu.com/p/434798426
+
+
+
+#### 2. computed、watch 、watchEffect源码分析
+
+> 书写形式
+>
+> ```js
+> let count = 0; // count 具有响应式属性，且有value属性
+> 
+> // 1.computed
+> let x = computed (() = > count.value + 3)
+> 
+> // 2.watch
+> watch(() = > count.value,(currentValue,preValue) = > {},{deep,immediate})
+> 
+> // 3.watchEffect
+> let stop = watchEffect(() = > count.value + 3)
+> 
+> ```
+>
+> 特点区别
+>
+> <img src="VUE2.0.assets/image-20220119111054739.png" alt="image-20220119111054739" style="zoom:25%;" align="left"/>
+
+##### 2.1 computed
+
+1.**会基于内部响应式依赖进行缓存**，dirty标记。computed里面的响应式变量发生修改，第一次在computed判断dirty为true时，执行fn() 即执行相加产生新值computedValue，并将dirty置为false。如果第二次直接访问触发get（无修改），dirty为false，那么直接返回value。那么dirty在什么时候置换回来true呢？在响应式依赖发生改变时（通知依赖处理阶段），置换回来。
+
+<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20220120101538914.png" alt="image-20220120101538914" style="zoom: 50%;" align="left"/>
+
+2.**相关响应式依赖发生改变才会重新求值**，因为上一步的dirty置换成了false，所以只能缓存第一次的计算值，当相关依赖再次发生改变时，并不会进行计算。所以在computed中写入一个scheduler来控制dirty，当dirty为true时就不用置换为false，直接缓存第一次计算值。当响应依赖发生改变，get()监听到值的变化会执行判断触发renner()，renner()会把computed的计算和钩子scheduler（处理dirty是否需要置换true，是否需要再次计算）传递给effect。
+
+在effect中执行计算体，当值改变会触发依赖的执行，在依赖的执行过程中触发钩子scheduler来打开dirty再次计算
+
+<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20220121103713387.png" alt="image-20220121103713387" style="zoom:50%;" align="left"/>
+
+##### 2.2 watch
+
+
 
 ### 四、VUE生态以及源码分析
 
