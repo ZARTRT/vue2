@@ -404,7 +404,7 @@ event.stopProation()
 
 4.5  子组件上的某个元素上v-bind="$attrs"，v-on="$listeners"来接受父组件传递过来的参数（属性和事件），绑定属性和事件的接收可以来实现双向的绑定组件之间的通信
 
-<img src="VUE2.0.assets/image-20211224172523076.png" alt="image-20211224172523076" style="zoom:25%;" align="left"/>
+<img src="VUE2.0.assets/image-20211224172523076.png" alt="image-20211224172523076" style="zoom: 50%;" align="left"/>
 
 #### 5.Vue.mixin（混入对象）
 
@@ -628,5 +628,113 @@ watch 比较前后值的不同进行处理
 
 <img src="VUE2.0.assets/image-20211119095417792.png" alt="image-20211119095417792" style="zoom: 50%;" align="left"/>
 
+#### 1.Vuex
+
+##### 1.1官方vuex图解
+
+<img src="VUE2.0.assets/image-20220124155903275.png" alt="image-20220124155903275" style="zoom:25%;" align="left"/>
+
+state：**vuex中唯一的数据源**，vuex中的state和vue实例中的date遵循相同的规则，都具有相响应式。正是因为这样，Vue Component（vue实例）能通过computed属性返回在vuex中读取的值，从而响应式的根据state的变化进行相关渲染。
+
+getter：**vuex允许定义getter，可以理解为store中的计算属性**。比如要定义状态或者过滤state中的数据。跟vue实例中的computed一样，依赖响应式进行缓存或者依赖响应式值变化以后通知开启并进行计算（执行函数体或者代码）
+
+Mutation：**修改vuex Store唯一状态的唯一方法就是提交Mutation**，vuex中的mutation很类似于事件，每个mutation都有一个字符串事件类型和回调函数，通过store.commit来修改state里面的数据。特别注意的是mutation是同步的，可通过vue提供的插件机制来订阅mutation变化，可进行打点和数据监听。
+
+Action：**来进行异步操作**，完成接口获取等异步操作
+
+注意：
+
+1. store中的getters和vue Component中的computed一样，但是里面书写简化的方式不一样。因为他们调用方式也不一样，有名无名函数的区别。
+
+2. mutations中关于方法payload传参的定义，在没有定义payload的类型情况下，可能导致在actions中调用commit触发mutations里面方法传参NaN。
+
+3. ```js
+   // 在state => state.count中，不要书写{state.count},会导致参数无法显示
+   ...mapState({
+         count: state =>  state.count ,
+         counts: state =>  state.count ,
+       }),
+   ```
 
 
+
+```js
+// 详细代码在note/04vuex
+// store/index.js
+import Vue from "vue";
+import Vuex from "vuex";
+
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+  state: {
+    count: 0,
+  },
+  getters: {
+    doubleCount: (state) => state.count * 2,
+  },
+  mutations: {
+    addCount: (state,payload=1) => (state.count += payload),
+  },
+  actions: {
+    // asyncAddCount里面的参数相当于vuex实例对象，然后通过解构拿到commit
+    asyncAddCount({commit}) {
+      setTimeout(()=>{
+        commit("addCount");
+      }, 1500)
+    }
+  },
+  modules: {},
+});
+
+```
+
+
+
+
+
+##### 1.2本地vuex图解
+
+![p1-vuex流程图](VUE2.0.assets/p1-vuex流程图.png)
+
+```js
+export default new Vuex.Store({
+  state: {
+    // 定义一个用户信息
+    userInfo: ''
+  },
+  mutations: {
+    // 定义一个方法用来给 userInfo 赋值
+    setUserInfo (state, payload) {
+      state.userInfo = payload
+    }
+  },
+  actions: {
+    // 定义一个方法：用来得到新的用户信息，并且将信息提交到 mutations
+    async setUserInfo (context) {
+      // 发送网络请求得到最新的数据
+      const res = await apiGetInfo()
+      // 将头像地址进行拼接
+      res.data.avatar = 'http://127.0.0.1:1337' + res.data.avatar
+      // 将新的数据保存到 mutaions 中
+      context.commit('setUserInfo', res.data)
+    }
+  },
+  modules: {
+  }
+  // 将参数保存到vuex中
+  // 页面中调用：this.$store.commit('setUserInfo', parameter)
+  // 文件中调用：store.commit('setUserInfo', parameter) （这里需要导入封装好的vuex）
+  
+  // 异步调用
+  // this.$store.dispatch('setUserInfo')
+
+```
+
+
+
+##### 1.3 总结vuex
+
+- **vuex最大的杀器：大大简化了组件之间通信的过程**
+- 事件操作在子组件（mutations、actions），显示逻辑在父组件（state、getters），就算组件层级再深也同样适用
+- <img src="VUE2.0.assets/image-20220124183746111.png" alt="image-20220124183746111" style="zoom:25%;" align="left"/>
