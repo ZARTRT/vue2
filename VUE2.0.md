@@ -628,7 +628,7 @@ watch 比较前后值的不同进行处理
 
 <img src="VUE2.0.assets/image-20211119095417792.png" alt="image-20211119095417792" style="zoom: 50%;" align="left"/>
 
-#### 1.Vuex
+#### 1.Vuex上
 
 ##### 1.1官方vuex图解
 
@@ -684,6 +684,7 @@ export default new Vuex.Store({
       }, 1500)
     }
   },
+  // 模块
   modules: {},
 });
 
@@ -722,6 +723,7 @@ export default new Vuex.Store({
   },
   modules: {
   }
+  
   // 将参数保存到vuex中
   // 页面中调用：this.$store.commit('setUserInfo', parameter)
   // 文件中调用：store.commit('setUserInfo', parameter) （这里需要导入封装好的vuex）
@@ -738,3 +740,236 @@ export default new Vuex.Store({
 - **vuex最大的杀器：大大简化了组件之间通信的过程**
 - 事件操作在子组件（mutations、actions），显示逻辑在父组件（state、getters），就算组件层级再深也同样适用
 - <img src="VUE2.0.assets/image-20220124183746111.png" alt="image-20220124183746111" style="zoom:25%;" align="left"/>
+
+#### 2.Vuex下
+
+##### 2.1响应式原理
+
+```js
+// 响应式部分
+// let x;
+// let y;
+// let f = n => n * 100 + 100;
+
+let active;
+
+let watch = function(cb) {
+  active = cb;
+  active();
+  active = null;
+};
+
+let queue = [];
+let nextTick = cb => Promise.resolve().then(cb);
+let queueJob = job => {
+  if (!queue.includes(job)) {
+    queue.push(job);
+    nextTick(flushJobs);
+  }
+};
+let flushJobs = () => {
+  let job;
+  while ((job = queue.shift()) !== undefined) {
+    job();
+  }
+};
+
+class Dep {
+  constructor() {
+    this.deps = new Set();
+  }
+  depend() {
+    if (active) {
+      this.deps.add(active);
+    }
+  }
+  notify() {
+    this.deps.forEach(dep => queueJob(dep));
+  }
+}
+
+let ref = initValue => {
+  let value = initValue;
+  let dep = new Dep();
+
+  return Object.defineProperty({}, "value", {
+    get() {
+      dep.depend();
+      return value;
+    },
+    set(newValue) {
+      value = newValue;
+      dep.notify();
+    }
+  });
+};
+
+let createReactive = (target, prop, value) => {
+  let dep = new Dep();
+
+  // return new Proxy(target, {
+  //   get(target, prop) {
+  //     dep.depend();
+  //     return Reflect.get(target, prop);
+  //   },
+  //   set(target, prop, value) {
+  //     Reflect.set(target, prop, value);
+  //     dep.notify();
+  //   },
+  // });
+
+  return Object.defineProperty(target, prop, {
+    get() {
+      dep.depend();
+      return value;
+    },
+    set(newValue) {
+      value = newValue;
+      dep.notify();
+    }
+  });
+};
+
+export let reacitve = obj => {
+  let dep = new Dep();
+
+  Object.keys(obj).forEach(key => {
+    let value = obj[key];
+    createReactive(obj, key, value);
+  });
+
+  return obj;
+};
+
+// let data = reacitve({
+//   count: 0
+// });
+
+import { Store } from "./vuex";
+
+let store = new Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    addCount(state, payload) {
+      state.count += payload || 1;
+    }
+  },
+  // 插件
+  plugins: [
+    store =>
+    	// store的subscribe方法添加订阅mutations
+      store.subscribe((mutation, state) => {
+        console.log(mutation);
+      })
+  ]
+});
+
+document.getElementById("add").addEventListener("click", function() {
+  // data.count++;
+  store.commit("addCount", 1);
+});
+let str;
+watch(() => {
+  str = `hello ${store.state.count}`;
+  document.getElementById("app").innerText = str;
+});
+
+```
+
+```js
+// store部分
+import { reacitve } from "./index";  // 引用上面的文件
+
+ /* 
+  @param options 扩展对象
+  @param reacitve 引入进来的具有响应式能力的
+  */
+export class Store {
+  constructor(options = {}) {
+    let { state, mutations, plugins } = options;
+    this._vm = reacitve(state);
+    this._mutations = mutations;
+    
+		// 订阅数组
+    this._subscirbe = [];
+    // 插件
+    plugins.forEach(plugin => plugin(this));
+  }
+
+  get state() {
+    return this._vm;
+  }
+
+  /* 
+  @param type commit时提交的mutations中的方法
+  @param payload 传递的参数
+  */
+  commit(type, payload) {
+    const entry = this._mutations[type];
+    if (!entry) {
+      return;
+    }
+    // 执行mutations中的方法
+    entry(this.state, payload);
+		// 执行mutations
+    this._subscirbe.forEach(sub => sub({ type, payload }, this.state));
+  }
+
+  // fn参数就是添加进来的mutations订阅部分
+  subscribe(fn) {
+    if (!this._subscirbe.includes(fn)) {
+      this._subscirbe.push(fn);
+    }
+  }
+}
+
+```
+
+##### 2.2模块化设计
+
+当store单一状态树，应用的所有状态都在一个比较大的对象当中。当应用复杂时，store就会显得很臃肿。
+
+为了解决这个问题，vuex允许我们将sotre分割成模块module
+
+###### moudule分割
+
+在创建vuex实例时，添加modules
+
+<img src="VUE2.0.assets/image-20220126105837252.png" alt="image-20220126105837252" style="zoom: 33%;" align="left"/>
+
+###### 局部状态
+
+Mutation、getters、actions中的state均为当前moduleA中的局部状态
+
+<img src="VUE2.0.assets/image-20220126110302128.png" alt="image-20220126110302128" style="zoom:33%;" align="left"/>
+
+###### 命名空间
+
+默认情况下，模块内部的action、mutation、getter是注册在**全局命名空间**的，这样会导致不同的module之间存在命名冲突的问题
+
+为了更高的封装性和复用性，所以，我们可以通过namespaced: true; 访问对应module的路径（moduleA、moduleB...）去访问各自的action、mutation、getter
+
+<img src="VUE2.0.assets/image-20220126110703788.png" alt="image-20220126110703788" style="zoom:33%;" align="left"/>
+
+###### 跨模块访问
+
+根模块：modules
+
+子模块：foo
+
+root前缀的都能访问根模块下面的内容，不加就访问子模块下面的内容
+
+<img src="VUE2.0.assets/image-20220126112027124.png" alt="image-20220126112027124" style="zoom: 33%;" align="left"/>
+
+
+
+#### 5.vue生态总结
+
+- computed watch vuex 里面都跟响应式有关系
+- computed watch对响应式数据进行了进一步的处理，vuex是需要把state数据放入响应式
+- 只是在执行依赖的时候，各有不同的事情要做：
+  1.比如computed会缓存（通过判断开关）、会依赖数据响应式变化而计算，
+  2.watch则是会监听变化去执行操作（通过比较新旧值），
+  3.vuex则是把state里面的数据添加到响应式作响应式更新，后面通过mutation同步去改变状态，同样也能通过action异步去改变。最后访问还是修改再去做响应式数据的变化。mutation能订阅 观测状态变化，正是因为vue提供的插件机制能订阅，在源码分析到有写入plugins会执行订阅添加mutation，整个store类当中也有订阅的方法，从代码上看插件执行时会执行订阅，订阅的就是mutation。在commit时，不仅仅会执行调用mutation里面的方法，还会执行插件添加进来的订阅。
