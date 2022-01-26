@@ -965,6 +965,42 @@ root前缀的都能访问根模块下面的内容，不加就访问子模块下�
 
 
 
+#### 3.Vue Router上
+
+路由：就是通过互联的网络把信息从源地址传输到目的地址的活动
+
+早之前路由是在后端控制，在单页应用随着ajax的崛起（局部刷新）逐步转向了前端来管理路由
+
+##### 3.1 vue-router图解
+
+<img src="VUE2.0.assets/image-20220126145502774.png" alt="image-20220126145502774" style="zoom: 25%;" align="left"/>
+
+监听器：监听history路由历史栈
+
+change：路由改变
+
+RouterView：页面出口
+
+render：页面渲染
+
+vue-router中的监听器用来监听浏览器history的变化，比如浏览器地址栏的地址改变，或者操作浏览器前进、后退按钮后，都会让history历史栈相应进行改变，当监听到history中改变以后通过路由表声明了的路由对应的组件，然后使用RouterView进行VuePage渲染。
+
+##### 3.2 如何监听浏览器History记录变化
+
+<img src="VUE2.0.assets/image-20220126151407834.png" alt="image-20220126151407834" style="zoom:25%;" align="left"/>
+
+在window中有两种监听事件来监听浏览器历史记录变化，而这两个监听事件对应了两种监听模式：Hash Mode和HTML5 Mode
+
+- Hash Mode模式onhashchange：监听URL当中的hash变化， 这里hash是指URL地址#后面的信息,当hash变化时会触发window.onhashchange事件
+
+  <img src="VUE2.0.assets/image-20220126153142491.png" alt="image-20220126153142491" style="zoom:25%;" align="left"/>
+
+  
+
+- HTML5 mode模式onpopstate：监听History栈当中的变化
+
+
+
 #### 5.vue生态总结
 
 - computed watch vuex 里面都跟响应式有关系
