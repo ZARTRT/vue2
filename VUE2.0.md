@@ -1,18 +1,23 @@
 ---
-typora-copy-images-to: VUE2.0.assets
+typora-copy-images-to: ./VUE2.0.assets
 ---
 
 # VUE 2.0
 
 ### 一、基础用法
 
-<img src='VUE2.0.assets/image-20211119094009931.png' align='left' style="zoom: 50%;" />
+<h3>基础用法<h3>
+
+
+<img src='./VUE2.0.assets/image-20211119094009931.png' align='left' style="zoom: 50%;" />
 
 #### 1.vue cli
 
+
+
 1.1 安装vue脚手架
 
-<img src="VUE2.0.assets/image-20211119144114873.png" alt="image-20211119144114873" style="zoom: 25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211119144114873.png" alt="image-20211119144114873" style="zoom: 25%;" align="left"/>
 
 1.2 查看vue脚手架版本
 
@@ -24,15 +29,15 @@ npm list vue
 
 #### 2.单文件组件
 
-<img src="VUE2.0.assets/image-20211119144604251.png" alt="image-20211119144604251" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211119144604251.png" alt="image-20211119144604251" style="zoom:25%;" align="left"/>
 
 #### 3.命名规则
 
-<img src="VUE2.0.assets/image-20211119144825249.png" alt="image-20211119144825249" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211119144825249.png" alt="image-20211119144825249" style="zoom:25%;" align="left"/>
 
 ------
 
-<img src="VUE2.0.assets/image-20211119145520812.png" alt="image-20211119145520812" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211119145520812.png" alt="image-20211119145520812" style="zoom:25%;" align="left"/>
 
 3.1 产生实例的都用大驼峰命名(PascalCase)，因为我们的js类和组件都可以产生多个实例
 
@@ -48,7 +53,7 @@ npm list vue
 
 ##### 4.2 模板插值
 
-> <img src="VUE2.0.assets/image-20211119151144989.png" alt="image-20211119151144989" style="zoom:25%;" align="left"/>
+> <img src="./VUE2.0.assets/image-20211119151144989.png" alt="image-20211119151144989" style="zoom:25%;" align="left"/>
 
 ##### 4.3 指令
 
@@ -64,7 +69,7 @@ npm list vue
 
 > v-if会根据响应式的参数，在切换过程中条件块的事件监听和子组件会被虚拟dom销毁和重建
 >
-> <img src="VUE2.0.assets/image-20211119152415770.png" alt="image-20211119152415770" style="zoom:25%;" align="left"/>
+> <img src="./VUE2.0.assets/image-20211119152415770.png" alt="image-20211119152415770" style="zoom:25%;" align="left"/>
 
 ##### 4.5  列表循环
 
@@ -72,7 +77,7 @@ npm list vue
 >
 > 非得用的话，记住v-for的优先级高于v-if
 >
-> <img src="VUE2.0.assets/image-20211119152936378.png" alt="image-20211119152936378" style="zoom:25%;" align="left"/>
+> <img src="./VUE2.0.assets/image-20211119152936378.png" alt="image-20211119152936378" style="zoom:25%;" align="left"/>
 
 ##### 4.6 ref
 
@@ -82,7 +87,7 @@ npm list vue
 >
 > ⚠️：只有在组件或者dom节点被渲染出来以后，才能通过this.$refs去访问
 >
-> <img src="VUE2.0.assets/image-20211119153230024.png" alt="image-20211119153230024" style="zoom:25%;" align="left"/>
+> <img src="./VUE2.0.assets/image-20211119153230024.png" alt="image-20211119153230024" style="zoom:25%;" align="left"/>
 
 ##### 4.7 JSX
 
@@ -90,11 +95,11 @@ npm list vue
 >
 > JSX-条件渲染
 >
-> <img src="VUE2.0.assets/image-20211119153844751.png" alt="image-20211119153844751" style="zoom:25%;" align="left"/>
+> <img src="./VUE2.0.assets/image-20211119153844751.png" alt="image-20211119153844751" style="zoom:25%;" align="left"/>
 >
 > JSX-列表循环
 >
-> <img src="VUE2.0.assets/image-20211119153942325.png" alt="image-20211119153942325" style="zoom:28%;" align="left"/>
+> <img src="./VUE2.0.assets/image-20211119153942325.png" alt="image-20211119153942325" style="zoom:28%;" align="left"/>
 
 #### 5.数据
 
@@ -112,17 +117,17 @@ npm list vue
 >
 > ）prop 父传递子
 >
-> <img src="VUE2.0.assets/image-20211119155828794.png" alt="image-20211119155828794" style="zoom:25%;" align="left"/>
+> <img src="./VUE2.0.assets/image-20211119155828794.png" alt="image-20211119155828794" style="zoom:25%;" align="left"/>
 >
 > 
 >
 > ）prop属性校验
 >
-> <img src="VUE2.0.assets/image-20211119162331045.png" alt="image-20211119162331045" style="zoom:25%;" align="left"/>
+> <img src="./VUE2.0.assets/image-20211119162331045.png" alt="image-20211119162331045" style="zoom:25%;" align="left"/>
 
 ##### 5.2 单向数据流
 
-> <img src="VUE2.0.assets/image-20211119161651444.png" alt="image-20211119161651444" style="zoom:25%;" align="left"/>
+> <img src="./VUE2.0.assets/image-20211119161651444.png" alt="image-20211119161651444" style="zoom:25%;" align="left"/>
 >
 > vue是单向数据流的，父组件的数据更新会向下流到子组件，为什么反过来this.parentName则不行？
 >
@@ -134,7 +139,7 @@ npm list vue
 
 > 计算属性和方法的区别
 
-<img src="VUE2.0.assets/image-20211124144923894.png" alt="image-20211124144923894" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211124144923894.png" alt="image-20211124144923894" style="zoom:25%;" align="left"/>
 
 1.方法是在每一次页面渲染的时候，都发生一次运行。比如将count()方法放入到页面当中，当页面渲染时count()方法都会执行一次，而如果将count()放入到computed计算属性当中，当页面发生其它渲染时就不会执行。只有当count依赖的属性发生改变时，才会计算并依赖响应式进行缓存起来。
 
@@ -142,7 +147,7 @@ npm list vue
 
 3.⚠️ 小技巧：在模板中，如果有一些常量不希望被放在dota当中去响应式依赖收集时，可以利用computed的缓存特性，将这个常量放在计算属性当中。
 
-<img src="VUE2.0.assets/image-20211124151228831.png" alt="image-20211124151228831" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211124151228831.png" alt="image-20211124151228831" style="zoom:25%;" align="left"/>
 
 > 侦听器 watch
 
@@ -168,7 +173,7 @@ computed和watch都可以侦听数据的变化，那么他们有什么区别？
 
 解决方案一：通过vue.set在data上响应式的添加属性，并把这个属性加到响应式的跟踪里面去。
 
-<img src="VUE2.0.assets/image-20211124162707789.png" alt="image-20211124162707789" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211124162707789.png" alt="image-20211124162707789" style="zoom:25%;" align="left"/>
 
 解决方案二：使用数组的push
 
@@ -238,7 +243,7 @@ event.stopProation()
 
 3.在javascript中，false、0、""、null、undefined、NaN都不是真值（true），其它都是truthy值
 
-<img src="VUE2.0.assets/image-20211125153441393.png" alt="image-20211125153441393" style="zoom: 67%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211125153441393.png" alt="image-20211125153441393" style="zoom: 67%;" align="left"/>
 
 ##### 6.4 Scoped
 
@@ -246,7 +251,7 @@ event.stopProation()
 
 当使用了scoped以后，编译出来的html节点上就会多出data-v-随机哈希值，同样在编译出来的style上也会有data-v-随机哈希值的选择器
 
-<img src="VUE2.0.assets/image-20211125154118770.png" alt="image-20211125154118770" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211125154118770.png" alt="image-20211125154118770" style="zoom:25%;" align="left"/>
 
 #### 7.组件
 
@@ -266,29 +271,29 @@ event.stopProation()
 
 ###### 7.1.2 局部注册的组件只能在当前组件中使用
 
-<img src="VUE2.0.assets/image-20211125155931170.png" alt="image-20211125155931170" style="zoom: 40%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211125155931170.png" alt="image-20211125155931170" style="zoom: 40%;" align="left"/>
 
 ###### 7.1.3 全局导入
 
 当我们经常使用组件而要不断导入时，其实很浪费时间。这时可以使用全局导入，但是还是会有体积不可控的问题产生
 
-<img src="VUE2.0.assets/image-20211125160558968.png" alt="image-20211125160558968"  align="left" style="zoom: 50%;" />
+<img src="./VUE2.0.assets/image-20211125160558968.png" alt="image-20211125160558968"  align="left" style="zoom: 50%;" />
 
 ###### 7.1.4 按需载入（瘦身）
 
 为了解决项目体积不可控的问题，特别是引用一些三方库的时候，比如elementUI。在最终发布的时候，我们并不希望打包所有组件资源，这个时候我就要按需载入了。也就是模板中用到了哪个组件资源库具体的组件，才会打包那个用到的组件，并不会大包所有组件资源库。
 
-<img src="VUE2.0.assets/image-20211125162144513.png" alt="image-20211125162144513" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211125162144513.png" alt="image-20211125162144513" style="zoom:25%;" align="left"/>
 
 ##### 7.2 组件生命周期
 
 ###### 7.2.1 组件生命周期图
 
-<img src="VUE2.0.assets/lifecycle.png"  align="left"  />
+<img src="./VUE2.0.assets/lifecycle.png"  align="left"  />
 
 ###### 7.2.2 组件生命周期每个阶段所处理的事情
 
-<img src="VUE2.0.assets/image-20211130111243679.png" alt="image-20211130111243679" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211130111243679.png" alt="image-20211130111243679" style="zoom:25%;" align="left"/>
 
 ##### 7.3 动态组件
 
@@ -306,15 +311,15 @@ event.stopProation()
 
 2.组件实例通过vm.$el获取dom元素
 
-<img src="VUE2.0.assets/image-20211130122706835.png" alt="image-20211130122706835" style="zoom: 25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211130122706835.png" alt="image-20211130122706835" style="zoom: 25%;" align="left"/>
 
 ##### 7.5 keep-alive的生命周期和props
 
-<img src="VUE2.0.assets/image-20211130123600915.png" alt="image-20211130123600915" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211130123600915.png" alt="image-20211130123600915" style="zoom:25%;" align="left"/>
 
 ### 二、高阶用法
 
-<img src="VUE2.0.assets/image-20211119094646318.png" alt="" style="zoom: 50%;" align='left'/>
+<img src="./VUE2.0.assets/image-20211119094646318.png" alt="" style="zoom: 50%;" align='left'/>
 
 #### 1.自定义指令
 
@@ -322,15 +327,15 @@ event.stopProation()
 
 2.1**v-model**，用于在表单元素input 、textarea及select上创建双向数据绑定的语法糖
 
-<img src="VUE2.0.assets/image-20211209103851720.png" alt="image-20211209103851720" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211209103851720.png" alt="image-20211209103851720" style="zoom:25%;" align="left"/>
 
 2.2由于表单值属性不一样，那么双向绑定的也不一样，使用value和checked属性作为prop属性来传递，用change和input事件作为监听从子传到父。**v-model.lazy**用change事件代替input事件，意思就是失焦后改变
 
-<img src="VUE2.0.assets/image-20211209104535019.png" alt="image-20211209104535019" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211209104535019.png" alt="image-20211209104535019" style="zoom:25%;" align="left"/>
 
 2.3 在vue框架中，v-model对于合成事件做了优化，比如输入拼音去合成中文和日文时，输入框中的拼音不被双向绑定，等到具体合成中文和日文时才双向绑定上去。
 
-<img src="VUE2.0.assets/image-20211209114419930.png" alt="image-20211209114419930" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211209114419930.png" alt="image-20211209114419930" style="zoom:25%;" align="left"/>
 
 2.4 v-model的修饰符
 
@@ -342,25 +347,25 @@ event.stopProation()
 
 更多具体实例在https://course.study.163.com/480000006849438/lecture-480000037171645
 
-<img src="VUE2.0.assets/image-20211209115434521.png" alt="image-20211209115434521" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211209115434521.png" alt="image-20211209115434521" style="zoom:25%;" align="left"/>
 
 #### 3.组件设计
 
 我们会抽取稳定的组件nav和footer组合成layout，将具有差异化的依照组件设计思想的依赖注入原则，在使用过程中动态的分配内容
 
-<img src="VUE2.0.assets/image-20211209151752041.png" alt="image-20211209151752041" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211209151752041.png" alt="image-20211209151752041" style="zoom:25%;" align="left"/>
 
-<img src="VUE2.0.assets/image-20211209151812803.png" alt="image-20211209151812803" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211209151812803.png" alt="image-20211209151812803" style="zoom:25%;" align="left"/>
 
 3.1插槽 v-slot设计思想，将公共的地方抽离出来
 
-<img src="VUE2.0.assets/image-20211209152358025.png" alt="image-20211209152358025" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211209152358025.png" alt="image-20211209152358025" style="zoom:25%;" align="left"/>
 
 3.2 编译作用域（作用域插槽）
 
 父组件中的变量跟子组件中的没有关系，对于子组件是不可见的。也就是说如下content的信息是在父组件编译，对于slot-layout是不可见的。
 
-<img src="VUE2.0.assets/image-20211209151343780.png" alt="image-20211209151343780" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211209151343780.png" alt="image-20211209151343780" style="zoom:25%;" align="left"/>
 
 3.3 稳定的组件
 
@@ -372,7 +377,7 @@ event.stopProation()
 
 当然是有的，可以把在稳定子组件里的变量提升到父组件中去，这样我们就能在父组件中控制而不需要修改稳定的组件（将信息插入到子组件），但是这样子组件中的数据就没有独立和完整性，在slot中通过v-bind:绑定属性以prop作用传递给父组件slot，然后在父组件使用
 
-<img src="VUE2.0.assets/image-20211212123342280.png" alt="image-20211212123342280" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211212123342280.png" alt="image-20211212123342280" style="zoom:25%;" align="left"/>
 
 
 
@@ -382,29 +387,29 @@ event.stopProation()
 
 4.1 **this.$root**获取根组件实例，**this.$parent** 获取父组件实例
 
-<img src="VUE2.0.assets/image-20211224155925724.png" alt="image-20211224155925724" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211224155925724.png" alt="image-20211224155925724" style="zoom:25%;" align="left"/>
 
 4.2 **$parent**的实际作用在element中定向消息的应用，找到指定要抵达的组件去传递数据
 
-<img src="VUE2.0.assets/image-20211224160623377.png" alt="image-20211224160623377" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211224160623377.png" alt="image-20211224160623377" style="zoom:25%;" align="left"/>
 
 4.3 **$ref** 父组件访问子组件
 
-<img src="VUE2.0.assets/image-20211224161024585.png" alt="image-20211224161024585" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211224161024585.png" alt="image-20211224161024585" style="zoom:25%;" align="left"/>
 
 4.4 ⚠️ 在this.$parent中，具有一定的强耦合出现。
 
 ​	比如说在新开发的功能中需要引用到写好的稳定组件，也就是说当子组件被多个父组件引用时，在子组件中有一段代码this.$parent.fish()，但是不是所有引用子组件的父组件中都有fish这个方法，这个时候就会报错访问不到fish这个方法。
 
-<img src="VUE2.0.assets/image-20211224162536400.png" alt="image-20211224162536400" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211224162536400.png" alt="image-20211224162536400" style="zoom:25%;" align="left"/>
 
 那么如何解决这样的强耦合呢？通过依赖注入来解决一定的强耦合。但是任然还是有一定的强耦合存在，还是需要成对的出现（父子组件）因为你子组件inject的内容需要父组件provide。依赖注入的优点父子组件之间不需要关注彼此的提供来源和注入来源。缺点是组件之间的耦合还是较为紧密，不易于重构，提供的属性也是非响应式的
 
-<img src="VUE2.0.assets/image-20211224163742566.png" alt="image-20211224163742566" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211224163742566.png" alt="image-20211224163742566" style="zoom:25%;" align="left"/>
 
 4.5  子组件上的某个元素上v-bind="$attrs"，v-on="$listeners"来接受父组件传递过来的参数（属性和事件），绑定属性和事件的接收可以来实现双向的绑定组件之间的通信
 
-<img src="VUE2.0.assets/image-20211224172523076.png" alt="image-20211224172523076" style="zoom: 50%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211224172523076.png" alt="image-20211224172523076" style="zoom: 50%;" align="left"/>
 
 #### 5.Vue.mixin（混入对象）
 
@@ -412,13 +417,13 @@ event.stopProation()
 
 这里需要了解vue文档里面的mixin原理和规则
 
-![image-20220102170701781](VUE2.0.assets\image-20220102170701781.png)
+![image-20220102170701781](./VUE2.0.assets/image-20220102170701781.png)
 
 #### 6.Vue.use（插件使用）
 
 也是结合了mixin，这里举例Vue.use(vuex)
 
-<img src="VUE2.0.assets/image-20220102170252721.png" alt="image-20220102170252721" style="zoom: 67%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220102170252721.png" alt="image-20220102170252721" style="zoom: 67%;" align="left"/>
 
 #### 7.组件复用
 
@@ -433,15 +438,15 @@ event.stopProation()
 - 可能会出现命名冲突的问题
 - 仅仅只是对逻辑的复用，模板不能复用
 
-![image-20220102173944459](VUE2.0.assets/image-20220102173944459.png)
+![image-20220102173944459](./VUE2.0.assets/image-20220102173944459.png)
 
-![image-20220102172736394](VUE2.0.assets/image-20220102172736394.png)
+![image-20220102172736394](./VUE2.0.assets/image-20220102172736394.png)
 
 7.2 HOC组件
 
 高阶组件本质也是对高阶函数的引用（装饰者模式）
 
-<img src="VUE2.0.assets/image-20220102175547321.png" alt="image-20220102175547321" style="zoom: 50%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220102175547321.png" alt="image-20220102175547321" style="zoom: 50%;" align="left"/>
 
 那么相比Mixin而言，HOC的优缺点
 
@@ -454,7 +459,7 @@ event.stopProation()
 
 - 组件复杂度高，多层嵌套，调试很痛苦（官方也不推荐这么做）
 
-<img src="VUE2.0.assets/image-20220102180206283.png" alt="image-20220102180206283"  align="left"/>
+<img src="./VUE2.0.assets/image-20220102180206283.png" alt="image-20220102180206283"  align="left"/>
 
 7.3 Renderless组件
 
@@ -552,7 +557,7 @@ export default {
 
 #### 1.Object.defineProperty Vue响应式源码分析
 
-<img src="VUE2.0.assets/image-20211119095225509.png" alt="image-20211119095225509" style="zoom: 50%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211119095225509.png" alt="image-20211119095225509" style="zoom: 50%;" align="left"/>
 
 关于响应式源码分析在知乎上写过一些，具体可点击：https://zhuanlan.zhihu.com/p/434798426
 
@@ -578,27 +583,27 @@ export default {
 >
 > 特点区别
 >
-> <img src="VUE2.0.assets/image-20220119111054739.png" alt="image-20220119111054739" style="zoom:25%;" align="left"/>
+> <img src="./VUE2.0.assets/image-20220119111054739.png" alt="image-20220119111054739" style="zoom:25%;" align="left"/>
 
 ##### 2.1 computed
 
 1.**会基于内部响应式依赖进行缓存**，dirty标记。computed里面的响应式变量发生修改，第一次在computed判断dirty为true时，执行fn() 即执行相加产生新值computedValue，并将dirty置为false。如果第二次直接访问触发get（无修改），dirty为false，那么直接返回value。那么dirty在什么时候置换回来true呢？在响应式依赖发生改变时（通知依赖处理阶段），置换回来。
 
-<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20220120101538914.png" alt="image-20220120101538914" style="zoom: 50%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220120101538914.png" alt="image-20220120101538914" style="zoom: 50%;" align="left"/>
 
 2.**相关响应式依赖发生改变才会重新求值**，因为上一步的dirty置换成了false，所以只能缓存第一次的计算值，当相关依赖再次发生改变时，并不会进行计算。所以在computed中写入一个scheduler来控制dirty，当dirty为true时就不用置换为false，直接缓存第一次计算值。当响应依赖发生改变，get()监听到值的变化会执行判断触发renner()，renner()会把computed的计算和钩子scheduler（处理dirty是否需要置换true，是否需要再次计算）传递给effect。
 
 在effect中执行计算体，当值改变会触发依赖的执行，在依赖的执行过程中触发钩子scheduler来打开dirty再次计算
 
-<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20220121103713387.png" alt="image-20220121103713387" style="zoom:50%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220121103713387.png" alt="image-20220121103713387" style="zoom:50%;" align="left"/>
 
 ##### 2.2 watch
 
 watch除了能监听键值、数组多个值，还能监听函数。
 
-<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20220121113349631.png" alt="image-20220121113349631" style="zoom: 50%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220121113349631.png" alt="image-20220121113349631" style="zoom: 50%;" align="left"/>
 
-<img src="/Users/zhangjian/Documents/gitHub/note/VUE2.0.assets/image-20220121113401386.png" alt="image-20220121113401386" style="zoom: 50%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220121113401386.png" alt="image-20220121113401386" style="zoom: 50%;" align="left"/>
 
 source：要处理的来源，键值、数组、函数
 
@@ -626,13 +631,13 @@ watch 比较前后值的不同进行处理
 
 ### 四、VUE生态以及源码分析
 
-<img src="VUE2.0.assets/image-20211119095417792.png" alt="image-20211119095417792" style="zoom: 50%;" align="left"/>
+<img src="./VUE2.0.assets/image-20211119095417792.png" alt="image-20211119095417792" style="zoom: 50%;" align="left"/>
 
 #### 1.Vuex上
 
 ##### 1.1官方vuex图解
 
-<img src="VUE2.0.assets/image-20220124155903275.png" alt="image-20220124155903275" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220124155903275.png" alt="image-20220124155903275" style="zoom:25%;" align="left"/>
 
 state：**vuex中唯一的数据源**，vuex中的state和vue实例中的date遵循相同的规则，都具有相响应式。正是因为这样，Vue Component（vue实例）能通过computed属性返回在vuex中读取的值，从而响应式的根据state的变化进行相关渲染。
 
@@ -696,7 +701,7 @@ export default new Vuex.Store({
 
 ##### 1.2本地vuex图解
 
-![p1-vuex流程图](VUE2.0.assets/p1-vuex流程图.png)
+![p1-vuex流程图](./VUE2.0.assets/p1-vuex流程图.png)
 
 ```js
 export default new Vuex.Store({
@@ -739,7 +744,7 @@ export default new Vuex.Store({
 
 - **vuex最大的杀器：大大简化了组件之间通信的过程**
 - 事件操作在子组件（mutations、actions），显示逻辑在父组件（state、getters），就算组件层级再深也同样适用
-- <img src="VUE2.0.assets/image-20220124183746111.png" alt="image-20220124183746111" style="zoom:25%;" align="left"/>
+- <img src="./VUE2.0.assets/image-20220124183746111.png" alt="image-20220124183746111" style="zoom:25%;" align="left"/>
 
 #### 2.Vuex下
 
@@ -937,13 +942,13 @@ export class Store {
 
 在创建vuex实例时，添加modules
 
-<img src="VUE2.0.assets/image-20220126105837252.png" alt="image-20220126105837252" style="zoom: 33%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220126105837252.png" alt="image-20220126105837252" style="zoom: 33%;" align="left"/>
 
 ###### 局部状态
 
 Mutation、getters、actions中的state均为当前moduleA中的局部状态
 
-<img src="VUE2.0.assets/image-20220126110302128.png" alt="image-20220126110302128" style="zoom:33%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220126110302128.png" alt="image-20220126110302128" style="zoom:33%;" align="left"/>
 
 ###### 命名空间
 
@@ -951,7 +956,7 @@ Mutation、getters、actions中的state均为当前moduleA中的局部状态
 
 为了更高的封装性和复用性，所以，我们可以通过namespaced: true; 访问对应module的路径（moduleA、moduleB...）去访问各自的action、mutation、getter
 
-<img src="VUE2.0.assets/image-20220126110703788.png" alt="image-20220126110703788" style="zoom:33%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220126110703788.png" alt="image-20220126110703788" style="zoom:33%;" align="left"/>
 
 ###### 跨模块访问
 
@@ -961,7 +966,7 @@ Mutation、getters、actions中的state均为当前moduleA中的局部状态
 
 root前缀的都能访问根模块下面的内容，不加就访问子模块下面的内容
 
-<img src="VUE2.0.assets/image-20220126112027124.png" alt="image-20220126112027124" style="zoom: 33%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220126112027124.png" alt="image-20220126112027124" style="zoom: 33%;" align="left"/>
 
 
 
@@ -973,7 +978,7 @@ root前缀的都能访问根模块下面的内容，不加就访问子模块下�
 
 ##### 3.1 vue-router图解
 
-<img src="VUE2.0.assets/image-20220126145502774.png" alt="image-20220126145502774" style="zoom: 25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220126145502774.png" alt="image-20220126145502774" style="zoom: 25%;" align="left"/>
 
 监听器：监听history路由历史栈
 
@@ -987,13 +992,13 @@ vue-router中的监听器用来监听浏览器history的变化，比如浏览器
 
 ##### 3.2 如何监听浏览器History记录变化
 
-<img src="VUE2.0.assets/image-20220126151407834.png" alt="image-20220126151407834" style="zoom:25%;" align="left"/>
+<img src="./VUE2.0.assets/image-20220126151407834.png" alt="image-20220126151407834" style="zoom:25%;" align="left"/>
 
 在window中有两种监听事件来监听浏览器历史记录变化，而这两个监听事件对应了两种监听模式：Hash Mode和HTML5 Mode
 
 - Hash Mode模式onhashchange：监听URL当中的hash变化， 这里hash是指URL地址#后面的信息,当hash变化时会触发window.onhashchange事件
 
-  <img src="VUE2.0.assets/image-20220126153142491.png" alt="image-20220126153142491" style="zoom:25%;" align="left"/>
+  <img src="./VUE2.0.assets/image-20220126153142491.png" alt="image-20220126153142491" style="zoom:25%;" align="left"/>
 
   
 
