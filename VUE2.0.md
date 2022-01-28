@@ -26,12 +26,6 @@ npm list vue
 
 #### 3.命名规则
 
-<img src="./VUE2.0.assets/image-20211119144825249.png" alt="image-20211119144825249" style="zoom:25%;" align="left"/>
-
-------
-
-<img src="./VUE2.0.assets/image-20211119145520812.png" alt="image-20211119145520812" style="zoom:25%;" align="left"/>
-
 3.1 产生实例的都用大驼峰命名(PascalCase)，因为我们的js类和组件都可以产生多个实例
 
 3.2 kebab-case 烤肉串命名方式，在HTML当中是大小写不敏感的，正是因为这样，我们在模板当中约定采用烤肉串的方式命名
