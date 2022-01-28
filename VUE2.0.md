@@ -6,14 +6,7 @@ typora-copy-images-to: ./VUE2.0.assets
 
 ### 一、基础用法
 
-<h3>基础用法<h3>
-
-
-<img src='./VUE2.0.assets/image-20211119094009931.png' align='left' style="zoom: 50%;" />
-
 #### 1.vue cli
-
-
 
 1.1 安装vue脚手架
 
@@ -318,8 +311,6 @@ event.stopProation()
 <img src="./VUE2.0.assets/image-20211130123600915.png" alt="image-20211130123600915" style="zoom:25%;" align="left"/>
 
 ### 二、高阶用法
-
-<img src="./VUE2.0.assets/image-20211119094646318.png" alt="" style="zoom: 50%;" align='left'/>
 
 #### 1.自定义指令
 
@@ -631,8 +622,6 @@ watch 比较前后值的不同进行处理
 
 ### 四、VUE生态以及源码分析
 
-<img src="./VUE2.0.assets/image-20211119095417792.png" alt="image-20211119095417792" style="zoom: 50%;" align="left"/>
-
 #### 1.Vuex上
 
 ##### 1.1官方vuex图解
@@ -751,105 +740,7 @@ export default new Vuex.Store({
 ##### 2.1响应式原理
 
 ```js
-// 响应式部分
-// let x;
-// let y;
-// let f = n => n * 100 + 100;
-
-let active;
-
-let watch = function(cb) {
-  active = cb;
-  active();
-  active = null;
-};
-
-let queue = [];
-let nextTick = cb => Promise.resolve().then(cb);
-let queueJob = job => {
-  if (!queue.includes(job)) {
-    queue.push(job);
-    nextTick(flushJobs);
-  }
-};
-let flushJobs = () => {
-  let job;
-  while ((job = queue.shift()) !== undefined) {
-    job();
-  }
-};
-
-class Dep {
-  constructor() {
-    this.deps = new Set();
-  }
-  depend() {
-    if (active) {
-      this.deps.add(active);
-    }
-  }
-  notify() {
-    this.deps.forEach(dep => queueJob(dep));
-  }
-}
-
-let ref = initValue => {
-  let value = initValue;
-  let dep = new Dep();
-
-  return Object.defineProperty({}, "value", {
-    get() {
-      dep.depend();
-      return value;
-    },
-    set(newValue) {
-      value = newValue;
-      dep.notify();
-    }
-  });
-};
-
-let createReactive = (target, prop, value) => {
-  let dep = new Dep();
-
-  // return new Proxy(target, {
-  //   get(target, prop) {
-  //     dep.depend();
-  //     return Reflect.get(target, prop);
-  //   },
-  //   set(target, prop, value) {
-  //     Reflect.set(target, prop, value);
-  //     dep.notify();
-  //   },
-  // });
-
-  return Object.defineProperty(target, prop, {
-    get() {
-      dep.depend();
-      return value;
-    },
-    set(newValue) {
-      value = newValue;
-      dep.notify();
-    }
-  });
-};
-
-export let reacitve = obj => {
-  let dep = new Dep();
-
-  Object.keys(obj).forEach(key => {
-    let value = obj[key];
-    createReactive(obj, key, value);
-  });
-
-  return obj;
-};
-
-// let data = reacitve({
-//   count: 0
-// });
-
+// 详细代码在vue2/05vuex响应式
 import { Store } from "./vuex";
 
 let store = new Store({
@@ -1004,6 +895,96 @@ vue-router中的监听器用来监听浏览器history的变化，比如浏览器
 
 - HTML5 mode模式onpopstate：监听History栈当中的变化
 
+##### 3.3 实现一个vue router
+
+`详细的内容就去看代码吧，在06vue-router`
+
+但我还是小结了一下，大致4个部分，路由表、 历史监听、渲染、出口组件
+
+###### 3.3.1 router里面的类
+
+1.路由表类，主要是构建路由与组件关联管理，里面实现将路由信息放入路由表类里面进行匹配
+
+2.history类，监听检测路由变化，监听html5 mode或者hash mode这两种模式的变化
+
+###### 3.3.2 router里面的初始化
+
+在初始化之前会通过Vue.mixin混入钩子，重要的部分是判断是否有路由，没有就取当前的router并且很关键的一步是vue的隐藏方法Vue.util.defineReactive添加路由响应式（路由当前路径）
+
+然后初始化时，拿到监听模式html5 mode或者hash mode，监听到当前路由的变化已经具有了响应式以后，通知match匹配改变
+
+###### 3.3.3 渲染出口
+
+在实例化router时 会有component组件参数，先这个把组件取出来判断有没有这个路由，有通过return抛出去。在什么时候会抛出去呢？在route发生改变时，因为上面整个的ruter实例已经被响应式，且这个过程都在被历史监听并匹配改变，匹配到了哪个路由表里的路径，就渲染哪个component.
+
+其次就是跳转时的push方法，比如router-link在html5 mode当中history.pushState或者history.replaceState不会出发popstate事件，所以要手动添加push方法去实现route变化之后拿到的匹配目标路由并且响应执行。
+
+###### 3.3.4 组件部分
+
+router-view || router-link 组件
+
+组件部分也就是上面第三点渲染出口的实现
+
+#### 4.Vue Router下(导航守卫)
+
+##### 4.1 注册、收集全局守卫（这里举例全局，没有举例独享守卫、组件内部守卫）
+
+```js
+ // 详细代码在06vue-router
+ // 注册导航守卫方法
+  function registerHook(list, fn) {
+  list.push(fn);
+  return () => {
+    const i = list.indexOf(fn);
+    if (i > -1) list.splice(i, 1);
+  };
+}
+
+ // 以下完成添加、收集全局守卫
+  beforeEach(fn) {
+    return registerHook(this.beforeHooks, fn);
+  }
+  beforeResolve(fn) {
+    return registerHook(this.resolveHooks, fn);
+  }
+  afterEach(fn) {
+    return registerHook(this.afterHooks, fn);
+  }
+  
+```
+
+##### 4.2 执行全局守卫
+
+我们执行路由守卫其实就是在**拿到的匹配目标路由和route响应执行更新**之间发生的
+
+```js
+  // 详细代码在06vue-router
+	confirmTransition(route, onComplete, onAbort) {
+    if (route === this.current) {
+      return;
+    }
+
+    const queue = [
+      ...this.router.beforeHooks,
+      route.beforeEnter,
+      route.component.beforeRouteEnter.bind(route.instance),
+      ...this.router.resolveHooks
+    ];
+
+    const iterator = (hook, next) => {
+      hook(route, this.current, to => {
+        if (to === false) {
+          onAbort && onAbort(to);
+        } else {
+          next(to);
+        }
+      });
+    };
+
+    runQueue(queue, iterator, () => onComplete());
+  }
+```
+
 
 
 #### 5.vue生态总结
@@ -1014,3 +995,4 @@ vue-router中的监听器用来监听浏览器history的变化，比如浏览器
   1.比如computed会缓存（通过判断开关）、会依赖数据响应式变化而计算，
   2.watch则是会监听变化去执行操作（通过比较新旧值），
   3.vuex则是把state里面的数据添加到响应式作响应式更新，后面通过mutation同步去改变状态，同样也能通过action异步去改变。最后访问还是修改再去做响应式数据的变化。mutation能订阅 观测状态变化，正是因为vue提供的插件机制能订阅，在源码分析到有写入plugins会执行订阅添加mutation，整个store类当中也有订阅的方法，从代码上看插件执行时会执行订阅，订阅的就是mutation。在commit时，不仅仅会执行调用mutation里面的方法，还会执行插件添加进来的订阅。
+- vue-router暂时没有什么总结，但是在现实一个vue-router上有小结
