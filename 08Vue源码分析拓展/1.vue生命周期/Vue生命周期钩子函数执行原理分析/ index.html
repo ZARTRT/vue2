@@ -8,20 +8,23 @@
 		<div id="app">
 			<component-a></component-a>
 		</div>
-		<script src="vue2.5.1.js"></script>
+		<script src="Vue.js"></script>
 		<script>
 			//组件选项的对象   注册局部组件的方式
 			var ComponentA = {
 				template:"<div>max</div>"
 			}
-			new Vue({
+		let vm = new Vue({
+				data: {
+					zhang: "zhang",
+				},
 				el:"#app",
 				components:{
 					"component-a" : ComponentA
 				}
 			})
 			
-			
+			console.log(vm.$options);
 
 		</script>
 	</body>

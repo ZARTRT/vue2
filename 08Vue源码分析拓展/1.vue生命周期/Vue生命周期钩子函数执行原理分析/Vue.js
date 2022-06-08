@@ -37,6 +37,7 @@
   var strats = config.optionMergeStrategies; // var strats = {}
   //自定义策略处理
   strats.data = function (parentVal, childVal, vm) {
+    console.log("childVal: ", childVal);
     //组件的基本原理
     //聚焦到vm   是根实例 还是组件
     if (!vm) {
@@ -92,15 +93,18 @@
 
   function callHook(vm, hook) {
     var handlers = vm.$options[hook];
-    for (var i = 0, j = handlers.length; i < j; i++) {
-      handlers[i].call(vm);
+    if (handlers) {
+      for (var i = 0, j = handlers.length; i < j; i++) {
+        handlers[i].call(vm);
+      }
     }
   }
 
   function initMixin(Vue) {
     Vue.prototype._init = function (options) {
       var vm = this;
-      console.log(Vue.options);
+      console.log("vm: ", vm);
+      console.log("Vue.options: ", Vue.options);
       //选项合并
       vm.$options = mergeOptions(Vue.options, options || {}, vm);
       callHook(vm, "beforeCreate");
