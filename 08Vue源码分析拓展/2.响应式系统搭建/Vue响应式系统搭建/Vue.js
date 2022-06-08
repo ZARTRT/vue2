@@ -125,11 +125,29 @@
 			}
 		}
 	}
+	var sharedPropertyDefinition = {
+		enumerable: true,
+		configurable: true,
+		get: noop,
+		set: noop
+	};
+
+	// target === vm, sourceKey === "_data", key === key 属性名称
+	function proxy(target, sourceKey, key) {
+		sharedPropertyDefinition.get = function proxyGetter() {
+			return this[sourceKey][key] // 实质获取属性值，this === vm, vm._data[key]
+		};
+		sharedPropertyDefinition.set = function proxySetter(val) {
+			this[sourceKey][key] = val; // 实质修改属性值vm._data[key] = "xxx"
+		};
+		// 这里给vm添加了[key]属性的监听，所以我们能通过vm[key]获取到值，但是如果该key是不合法的将不会触发proxy方法。
+		Object.defineProperty(target, key, sharedPropertyDefinition);
+	}
 
 	function initState(vm) {
+		// 初始化数据状态内容有很多，比如data，methods，computed，这里拿data来举例。
 		var opts = vm.$options;
 		if (opts.data) { //data == mergedInstanceDataFn
-			console.log(opts.data)
 			initData(vm);
 		} else {
 			observe(vm._data = {}, true /* asRootData */ );
@@ -139,6 +157,9 @@
 	function initData(vm) {
 		//校验数据对象data是否是一个纯对象
 		var data = vm.$options.data; //  函数  mergedInstanceDataFn
+		console.log("data策略处理返回的方法：", data)
+		// 我们都知道data在经过合并策略处理之后返回的是一个有名函数，
+		// 那么data有必要还进行类型校验吗？当然是要的，因为可以其它地方更改data的类型，比如在生命周期中。
 		data = vm._data = typeof data === 'function' ?
 			data(vm, vm) :
 			data || {};
